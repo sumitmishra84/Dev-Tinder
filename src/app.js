@@ -1,37 +1,34 @@
 const express = require("express");
 const app = express();
 
+app.use(
+  "/user",
+  (req, res, next) => {
+    console.log("Handling the route user");
+    // res.send("Response");
+    // next();
+  },
 
-//This will only handle GET call to /user
-app.get("/user",(req,res)=>{
-    res.send({firstname: "Sumit", lastname:"Mishra"});
-});
-
-app.post("/user",(req,res)=>{
-    console.log(req.body);
-    //saving data to db
-    res.send("Data successfully saved to the databases!");
-});
-
-app.delete("/user",(req,res)=>{
-    res.send("Data successfully saved to the databases!");
-});
-
-
-
-app.use("/hello", (req, res) => {
-    res.send("Mahadev");
-});
-
-app.use("/jay", (req, res) => {
-    res.send("ek bar bol de bhai, bol de na bhai");
-});
-
-
-// app.use("/", (req, res) => {
-//     res.send("Sumit Mishra");
-// });
+  (req, res) => {
+    console.log("Handling the rout user ");
+    res.send("2nd response!!");
+    // next();
+  },
+  (req, res) => {
+    console.log("Handling the rout user ");
+    res.send("3nd response!!");
+    next();
+  },
+  (req, res) => {
+    console.log("Handling the rout user");
+    res.send("4nd response!!");
+  },
+  (req, res) => {
+    console.log("Handling the rout user");
+    res.send("5nd response!!");
+  }
+);
 
 app.listen(8080, () => {
-    console.log("Bol Sankar Bhagwan ki Jay");
+  console.log("Bol Sankar Bhagwan ki Jay");
 });
