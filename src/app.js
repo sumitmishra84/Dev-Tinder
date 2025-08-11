@@ -1,28 +1,39 @@
 const express = require("express");
+const connectDB = require("./config/database");
 const app = express();
 
+// Middleware for parsing JSON data in request body
+app.use(express.json());
 
-const {adminAuth, userAuth}=require("./middlewares/auth");
-const res = require("express/lib/response");
+// POST request to signup
+app.post("/signup", async (req, res) => {
+  const user = {
+    firstName: "jay mmahakal",
+    lastName: "Ujjain",
+    emailId: "mahakal@gmail.com",
+    password: "Mahakal@12345"
+  };
 
-app.use("/admin", adminAuth);
+  const query = `INSERT INTO users (firstName, lastName, emailId, password) VALUES (?, ?, ?, ?)`;
 
-app.post("user/login", (req,res)=>{
-  res.send("User logged in successfully!");
-})
+  const connection = connectDB();  // Establish MySQL connection
 
-app.get("/admin/userAuth", (req, res) => {
-  res.send("User Data Send");
+  console.log('Executing query:', query, [user.firstName, user.lastName, user.emailId, user.password]);  // Debugging query
+
+  connection.query(query, [user.firstName, user.lastName, user.emailId, user.password], (err, results) => {
+    if (err) {
+      console.log('Error executing query:', err);  // Detailed error message
+      res.status(500).send('Error inserting user');
+      return;
+    }
+    console.log('User added successfully:', results);
+    res.send('User added successfully');
+  });
+
+  connection.end();  // Close connection after query execution
 });
 
-app.get("/admin/getAllData", (req, res) => {
-  res.send(" All Data Send");
-});
-
-app.get("/admin/deleteUser", (req, res) => {
-  res.send("Deleted a user");
-});
-
+// Start the server
 app.listen(8080, () => {
-  console.log("Bol Sankar Bhagwan ki Jay");
+  console.log("Server is successfully listening on port 8080...");
 });
